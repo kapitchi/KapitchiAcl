@@ -27,9 +27,10 @@ Requirements
 Usage
 -----
 You can manage roles, resources and what rules is loaded into ACL using module.config.php file (DI configuration) from your module.
-The module come with few pre-defined roles/resources/rules (see [module config](https://github.com/matuszemi/KapitchiAcl/blob/master/config/module.config.php)).
+The module comes with few pre-defined roles/resources/rules (see [module config](https://github.com/matuszemi/KapitchiAcl/blob/master/config/module.config.php)).
 
 Roles:
+
 * guest - anonymous/non authenticated user 
 * auth - authenticated user but with no local user reference 
 * user - authenticated user with local user reference 
@@ -59,3 +60,6 @@ TODO
     ),
 ),
 ```                                                  
+
+
+TODO
