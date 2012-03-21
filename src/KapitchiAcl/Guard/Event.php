@@ -2,13 +2,41 @@
 
 namespace KapitchiAcl\Guard;
 
-class ProtectorEvent implements Guard {
+use KapitchiAcl\Exception\NotAuthorizedException;
+
+class Event implements Guard {
     protected $aclService;
+    protected $eventGuardDefMapper;
     
     public function bootstrap() {
+        $events = \Zend\EventManager\StaticEventManager::getInstance();
+        $acl = $this->getAclService();
+        
+        $defMapper = $this->getEventGuardDefMapper();
+        $defs = $defMapper->findByRoleId($acl->getRole()->getRoleId());
+        
+        foreach($defs as $def) {
+            
+            $events->attach($def->getEventId(), $def->getEvent(), function($e) use ($acl, $def) {
+                $resource = $def->getResource();
+                $privilege = $def->getPrivilege();
+                if(!$acl->isAllowed($resource, $privilege)) {
+                    $roleId = $acl->getRole()->getRoleId();
+                    throw new NotAuthorizedException("You ($roleId) are not allowed to perform '$privilege' on '$resource'");
+                }
+            }, 1000);
+        }
         
     }
     
+    public function getEventGuardDefMapper() {
+        return $this->eventGuardDefMapper;
+    }
+
+    public function setEventGuardDefMapper($eventGuardDefMapper) {
+        $this->eventGuardDefMapper = $eventGuardDefMapper;
+    }
+        
     public function getAclService() {
         return $this->aclService;
     }

@@ -52,6 +52,7 @@ return array(
             'KapitchiAcl\Guard\Event' => array(
                 'parameters' => array(
                     'aclService' => 'KapitchiAcl\Service\Acl',
+                    'eventGuardDefMapper' => 'KapitchiAcl\Model\Mapper\EventGuardDefMapConfig',
                 )
             ),
         ),
