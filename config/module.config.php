@@ -39,7 +39,12 @@ return array(
             'KapitchiAcl\Guard\Route' => array(
                 'parameters' => array(
                     'aclService' => 'KapitchiAcl\Service\Acl',
-                    'routeResourceMap' => array(
+                    'routeResourceMapMapper' => 'KapitchiAcl\Model\Mapper\RouteResourceMapConfig',
+                )
+            ),
+            'KapitchiAcl\Model\Mapper\RouteResourceMapConfig' => array(
+                'parameters' => array(
+                    'config' => array(
                         'default' => 'Route/Default',
                     )
                 )

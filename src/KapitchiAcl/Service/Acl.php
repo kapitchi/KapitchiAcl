@@ -160,22 +160,6 @@ class Acl extends ServiceAbstract {
         $mapper->invalidate($e->getParam('role'));
     }
     
-    /**
-     * Retrieve the event manager
-     *
-     * Lazy-loads an EventManager instance if none registered.
-     * 
-     * @return EventCollection
-     */
-    public function events()
-    {
-        if (!$this->events instanceof EventCollection) {
-            $this->setEventManager(new EventManager(array(__CLASS__, get_class($this))));
-            $this->attachDefaultListeners();
-        }
-        return $this->events;
-    }
-    
     protected function attachDefaultListeners() {
         $events = $this->events();
         

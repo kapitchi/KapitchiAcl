@@ -7,14 +7,15 @@ use     Zend\Mvc\MvcEvent,
         Exception as NoRouteResourceFoundException;
 
 class Route implements Guard {
-    protected $routeResourceMap;
-    protected $defaultRouteResource;
+    protected $routeResourceMapMapper;
     protected $aclService;
     
     public function dispatch(MvcEvent $e) {
         $routeMatch = $e->getRouteMatch();
         $routeName = $routeMatch->getMatchedRouteName();
-        $routeResource = $this->getRouteResource($routeName);
+        
+        $map = $this->getRouteResourceMapMapper()->findByRouteName($routeName);
+        $routeResource = $map->getRouteResource($routeName);
         if($routeResource === null) {
             //$routeResource = $this->getDefaultRouteResource();
             //mz: TODO what in this case???
@@ -28,45 +29,15 @@ class Route implements Guard {
         }
     }
     
-    public function getRouteResource($routeName) {
-        $routes = explode('/', $routeName);
-        
-        $routeMap = $this->getRouteResourceMap();
-        
-        $resolved = isset($routeMap['default']) ? $routeMap['default'] : null;
-        while($route = array_shift($routes)) {
-            if(isset($routeMap['child_map'][$route])) {
-                $routeMap = $routeMap['child_map'][$route];
-                if(isset($routeMap['default'])) {
-                    $resolved = $routeMap['default'];
-                }
-                if(is_string($routeMap)) {
-                    $resolved = $routeMap;
-                    break;
-                }
-            }
-        }
-        
-        return $resolved;
-    }
-    
     //setters/getters
-    public function getRouteResourceMap() {
-        return $this->routeResourceMap;
+    public function getRouteResourceMapMapper() {
+        return $this->routeResourceMapMapper;
     }
 
-    public function setRouteResourceMap($routeResourceMap) {
-        $this->routeResourceMap = $routeResourceMap;
+    public function setRouteResourceMapMapper($routeResourceMapMapper) {
+        $this->routeResourceMapMapper = $routeResourceMapMapper;
     }
-
-    public function getDefaultRouteResource() {
-        return $this->defaultRouteResource;
-    }
-
-    public function setDefaultRouteResource($defaultRouteResource) {
-        $this->defaultRouteResource = $defaultRouteResource;
-    }
-
+        
     public function getAclService() {
         return $this->aclService;
     }
