@@ -20,7 +20,7 @@ return array(
                 'parameters' => array(
                     'config' => array(
                         'resources' => array(
-                            'Route/Default' => null,//used by KapitchiAcl\Guard\Route
+                            //'Route' => null,//used by KapitchiAcl\Guard\Route
                         ),
                         'roles' => array(
                             'guest' => null,
@@ -30,7 +30,7 @@ return array(
                         ),
                         'rules' => array(
                             'allow' => array(
-                                'allow/default_route' => array(array('auth', 'guest'), 'Route/Default'),
+                                //'allow/default_route' => array(array('auth', 'guest'), 'Route/Default'),
                             )
                         )
                     ),
@@ -45,7 +45,7 @@ return array(
             'KapitchiAcl\Model\Mapper\RouteResourceMapConfig' => array(
                 'parameters' => array(
                     'config' => array(
-                        'default' => 'Route/Default',
+                        //'default' => 'Route',
                     )
                 )
             ),

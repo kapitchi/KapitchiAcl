@@ -64,37 +64,33 @@ class AclLoaderConfig implements AclLoader {
      */
     protected function loadRules(ZendAcl $acl, array $rules) {
         if(isset($rules['allow'])) {
-            $allowRules = $rules['allow'];
+            foreach($rules['allow'] as $rule) {
+                $this->loadRule($acl, $rule, 'allow');
+            }
         }   
+
         if(isset($rules['deny'])) {
-            $denyRules = $rules['deny'];
+            foreach($rules['deny'] as $rule) {
+                $this->loadRule($acl, $rule, 'deny');
+            }
         }
-        
-        foreach($allowRules as $rule) {
-            $privileges = null;
-            if(count($rule) == 3) {
-                list($roles, $resources, $privileges) = $rule;
-            }
-            else if(count($rule) == 2) {
-                list($roles, $resources) = $rule;
-            }
-            else {
-                throw new InvalidArgumentException("What is this rule definition about? " . print_r($rule, true));
-            }
+    }
+    
+    protected function loadRule(ZendAcl $acl, array $rule, $type) {
+        $privileges = null;
+        if(count($rule) == 3) {//role/resource/privilege defined
+            list($roles, $resources, $privileges) = $rule;
+        }
+        else if(count($rule) == 2) {//role/resource defined
+            list($roles, $resources) = $rule;
+        }
+        else {
+            throw new InvalidArgumentException("What is this rule definition about? " . print_r($rule, true));
+        }
+        if($type == 'allow') {
             $acl->allow($roles, $resources, $privileges);
         }
-        
-        foreach($denyRules as $rule) {
-            $privileges = null;
-            if(count($rule) == 3) {
-                list($roles, $resources, $privileges) = $rule;
-            }
-            else if(count($rule) == 2) {
-                list($roles, $resources) = $rule;
-            }
-            else {
-                throw new InvalidArgumentException("What is this rule definition about? " . print_r($rule, true));
-            }
+        else {
             $acl->deny($roles, $resources, $privileges);
         }
     }
