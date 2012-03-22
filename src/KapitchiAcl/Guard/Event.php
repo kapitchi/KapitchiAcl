@@ -22,7 +22,7 @@ class Event implements Guard {
                 $privilege = $def->getPrivilege();
                 if(!$acl->isAllowed($resource, $privilege)) {
                     $roleId = $acl->getRole()->getRoleId();
-                    throw new NotAuthorizedException("You ($roleId) are not allowed to perform '$privilege' on '$resource'");
+                    throw new UnauthorizedException("You ($roleId) are not allowed to perform '$privilege' on '$resource'");
                 }
             }, 1000);
         }

@@ -25,7 +25,7 @@ class Route implements Guard {
         $acl = $this->getAclService();
         if(!$acl->isAllowed($routeResource)) {
             $roleId = $acl->getRole()->getRoleId();
-            throw new NotAuthorizedException("You ($roleId) are not allowed to access this route '$routeName' ($routeResource)");
+            throw new UnauthorizedException("You ($roleId) are not allowed to access this route '$routeName' ($routeResource)");
         }
     }
     
