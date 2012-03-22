@@ -2,10 +2,10 @@
 return array(
     'KapitchiAcl' => array(
         'options' => array(
-            'enable_cache' => false,
+            'enable_cache' => false,//enable static acl session cache 
             'enable_guards' => array(
-                'route' => true,
-                'event' => true,
+                'route' => true,//enable route guard
+                'event' => true,//enable event guard
             )
         ),
     ),

@@ -23,6 +23,8 @@ Features
 * Guards
   * Route - protects Mvc routes [COMPLETE]
   * Event - protects events [COMPLETE]     
+* Dynamic ACL [TBD]
+* ACL cache mechanism [TBD]
 * Db adapters (Zend\Db) for all above [NOT STARTED]
 * Config -> Db sync [NOT STARTED]
 
@@ -36,8 +38,12 @@ Usage
 =====
 You can manage roles, resources and what rules is loaded into ACL using module.config.php file (DI configuration) from your module.
 The module comes with few pre-defined roles/resources/rules (see [module config](https://github.com/kapitchi/KapitchiAcl/blob/master/config/module.config.php)).
-ACL module depends on other modules in order to provide role of currently logged in user otherwise it defaults to _guest_ role.
+ACL module depends on other modules in order to provide role of currently logged in user otherwise it defaults to _guest_ role (see "KapitchiAcl\Service\Acl.getRole" event description below).
 See an example in [KapitchiIdentity module - KapitchiAcl plugin](https://github.com/kapitchi/KapitchiIdentity/blob/master/src/KapitchiIdentity/Plugin/KapitchiAcl.php).
+
+Options
+-------
+See [module config](https://github.com/kapitchi/KapitchiAcl/blob/master/config/module.config.php#L4) for all options available.
 
 Roles, resources and rules
 --------------------------
@@ -273,3 +279,68 @@ return array(
 
 
 ```
+
+Dynamic ACL
+------------------------
+TBD
+
+
+Events
+------
+
+### KapitchiAcl\Service\Acl.getRole
+
+This event is used to retrieve role of currently logged in user. It expects listener to return Zend\Acl\Role instance; if none current role defaults to _guest_.
+
+Triggers until: Zend\Acl\Role
+
+Parameters: none
+
+
+### KapitchiAcl\Service\Acl.getAcl
+
+Used to retrieve Zend\Acl\Acl instance from e.g. caching mechanism. Acl returned is considered being fully loaded with roles, resources, rules.
+If none is returned Zend\Acl\Acl instance is created and KapitchiAcl\Service\Acl.loadStaticAcl and KapitchiAcl\Service\Acl.cacheStaticAcl events are triggered.
+
+Triggers until: Zend\Acl\Acl
+
+Parameters:
+* roleId - roleId of the user e.g. guest, user...
+
+### KapitchiAcl\Service\Acl.staticAclLoaded
+
+This event is trigger once ACL has been loaded. Can be used e.g. by caching mechanism to store ACL into session.
+
+Parameters:
+* acl - Zend\Acl\Acl object
+* roleId - roleId of the user e.g. guest, user...
+
+
+### KapitchiAcl\Service\Acl.invalidateCache
+
+Triggered when KapitchiAcl\Service\Acl::invalidateCache() is called manually.
+
+TBD: do we need auto invalidation of cached ACL? E.g. every 5 mins?
+
+Parameters:
+* roleId - roleId of the user e.g. guest, user...
+
+
+### TBD
+
+KapitchiAcl\Service\Acl.loadStaticAcl
+
+This is used to load up static Acl.
+array(
+                'acl' => $acl,
+                'roleId' => $roleId,
+            )
+'resolveResource', array(
+                'resource' => $resource
+            )
+'loadResource', array(
+                'acl' => $acl,
+                'roleId' => $roleId,
+                'resource' => $resource,
+                'privilage' => $privilege
+            )

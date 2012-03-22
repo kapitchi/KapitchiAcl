@@ -129,7 +129,7 @@ class Acl extends ServiceAbstract {
                 'acl' => $acl,
                 'roleId' => $roleId,
             ));
-            $this->triggerEvent('cacheStaticAcl', array(
+            $this->triggerEvent('staticAclLoaded', array(
                 'acl' => $acl,
                 'roleId' => $roleId,
             ));
@@ -173,7 +173,7 @@ class Acl extends ServiceAbstract {
         
         if($this->getModule()->getOption('enable_cache', false)) {
             $events->attach('getAcl', array($this, 'getCacheSessionAcl'));
-            $events->attach('cacheStaticAcl', array($this, 'persistCacheSessionAcl'));
+            $events->attach('staticAclLoaded', array($this, 'persistCacheSessionAcl'));
             $events->attach('invalidateCache', array($this, 'invalidateCacheSessionCache'));
         }
     }
