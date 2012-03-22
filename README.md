@@ -132,7 +132,7 @@ return array(
 
 Guards
 ------
-Guards "protects" different aspects of the application from being accessible by unauthorized users.
+Guards "protect" different aspects of the application from being accessible by unauthorized users.
 If unauthorized user tries to access e.g. route they are not permitted to [Unauthorized exception](https://github.com/kapitchi/KapitchiAcl/blob/master/src/KapitchiAcl/Exception/UnauthorizedException.php) is thrown.  
 They have been two guards implemented so far: Route and Event guards.
 
@@ -315,7 +315,7 @@ Parameters: none
 ### KapitchiAcl\Service\Acl.getAcl
 
 Used to retrieve Zend\Acl\Acl instance from e.g. caching mechanism. Acl returned is considered being fully loaded with roles, resources, rules.
-If none is returned Zend\Acl\Acl instance is created and KapitchiAcl\Service\Acl.loadStaticAcl and KapitchiAcl\Service\Acl.cacheStaticAcl events are triggered.
+If none is returned Zend\Acl\Acl instance is created and KapitchiAcl\Service\Acl.loadStaticAcl and KapitchiAcl\Service\Acl.staticAclLoaded events are triggered.
 
 Triggers until: Zend\Acl\Acl
 
