@@ -2,7 +2,7 @@
 
 namespace KapitchiAcl\Guard;
 
-use KapitchiAcl\Exception\NotAuthorizedException;
+use KapitchiAcl\Exception\UnauthorizedException;
 
 class Event implements Guard {
     protected $aclService;

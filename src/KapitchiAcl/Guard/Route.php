@@ -3,7 +3,7 @@
 namespace KapitchiAcl\Guard;
 
 use     Zend\Mvc\MvcEvent,
-        KapitchiAcl\Exception\NotAuthorizedException,
+        KapitchiAcl\Exception\UnauthorizedException,
         Exception as NoRouteResourceFoundException;
 
 class Route implements Guard {

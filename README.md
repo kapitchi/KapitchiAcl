@@ -22,6 +22,8 @@ Features
   * Roles (including hierarchies) [COMPLETE]
   * Resources (including hierarchies) [COMPLETE]
   * Allow/deny rules [COMPLETE]
+* Application services
+  * Acl [COMPLETE]
 * Guards
   * Route - protects Mvc routes [COMPLETE]
   * Event - protects events [COMPLETE]     
@@ -46,6 +48,17 @@ See an example in [KapitchiIdentity module - KapitchiAcl plugin](https://github.
 Options
 -------
 See [module config](https://github.com/kapitchi/KapitchiAcl/blob/master/config/module.config.php#L4) for all options available.
+
+Application services
+--------------------
+
+### KapitchiAcl\Service\Acl
+
+This is only one service delivered by this module with three public methods:
+
+* isAllowed(resource, privilege) - check if current user is allowed to resource/privilege
+* getRole() - returns current role of the user
+* invalidateCache() - TBD invalidates ACL cache (if enabled in options) - should be called when ACL for the user might change e.g. they login, logout, ...
 
 Roles, resources and rules
 --------------------------
