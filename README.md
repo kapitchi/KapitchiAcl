@@ -10,7 +10,7 @@ Provides ACL and different types of "guards" for your application.
 The module is still in experimental phase but it's working for me ;) - if you have any questions feel free to contact me anytime.
 
 Skype: matuszemi  
-Email: matus.zeman@gmail.com
+Email: matus.zeman@gmail.com  
 IRC: matuszemi @ FreeNode / #zftalk.2  
 
 Features
@@ -59,6 +59,8 @@ Only resource defined is _Route/Default_ used by Route Guard (see below). By def
 ACL can be fully configured from module config using DI settings of [AclLoaderConfig mapper](https://github.com/kapitchi/KapitchiAcl/blob/master/src/KapitchiAcl/Model/Mapper/AclLoaderConfig.php).
 Nice example can be found in [KapitchiIdentity module](https://github.com/kapitchi/KapitchiIdentity/blob/master/config/module.config.php) - search for "KapitchiAcl\Model\Mapper\AclLoaderConfig".
 The mapper reads config array defining roles/resources/rules in the structure below.
+
+#### Config example
 ```
 File: MyModule/config/module.config.php
 
@@ -79,10 +81,14 @@ $aclConfig = array(
     ),
     'rules' => array(
         'allow' => array(
-            'allow_rule_unique_identifier' => array('admin', null),//grand admin all privileges on any resource
-            'allow_rule_unique_identifier2' => array('user', 'child1'), //grand user all privileges on child1 resource
-            'allow_rule_unique_identifier3' => array('user', array('grandchild1', 'grandchild2'), 'persist'), //grand user persist privilege to both grandchild1 and grandchild2 resources
-            'allow_rule_unique_identifier4' => array('role1', 'parent', array('remove', 'create')), //grand role1 remove and create privileges on parent resource 
+            //grand admin all privileges on any resource
+            'allow_rule_unique_identifier' => array('admin', null),
+            //grand user all privileges on child1 resource
+            'allow_rule_unique_identifier2' => array('user', 'child1'),
+            //grand user persist privilege to both grandchild1 and grandchild2 resources
+            'allow_rule_unique_identifier3' => array('user', array('grandchild1', 'grandchild2'), 'persist'),
+            //grand role1 remove and create privileges on parent resource 
+            'allow_rule_unique_identifier4' => array('role1', 'parent', array('remove', 'create')),
         ),
         'deny' => array(
             //same format as for allow rules
@@ -113,18 +119,22 @@ They have been two guards implemented so far: Route and Event guards.
 ### Route guard
 Route guard is used to protect MVC routes. The guard configuration maps route into ACL route resource. Route resource ACL can be then configured as any other resource permissions.
 
+#### Config example
+
+Zend\Mvc\Router\RouteStack route configuration:
+
+* MyModule
+    * ChildRoute1
+    * ChildRoute2
+        * GrandChildRoute1
+        *GrandChildRoute2   
+
+See [ZF2 MVC Routing manual](http://packages.zendframework.com/docs/latest/manual/en/zend.mvc.routing.html) for more details or [KapitchiIdentity module example](https://github.com/kapitchi/KapitchiIdentity/blob/master/config/module.config.php).
+
+
 ```
 File: MyModule/config/module.config.php
 
-/**
- * Zend\Mvc\Router\RouteStack route configuration:
- * - MyModule
- *   - ChildRoute1
- *   - ChildRoute2
- *     - GrandChildRoute1
- *     - GrandChildRoute2   
- *  See [ZF2 MVC Routing manual](http://packages.zendframework.com/docs/latest/manual/en/zend.mvc.routing.html) for more details or [KapitchiIdentity module example](https://github.com/kapitchi/KapitchiIdentity/blob/master/config/module.config.php).
- */  
 
 $routeResourceMapConfig = array(
     'default' => 'Route' //sets default route resource - any unresolved routes defaults to 'Route' resource
