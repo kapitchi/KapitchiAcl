@@ -1,17 +1,19 @@
-[WIP] Zend Framework 2 - Kapitchi ACL module
+Zend Framework 2 - Kapitchi ACL module
 =================================================
 Version: 0.1  
 Author:  [Matus Zeman (matuszemi)](https://github.com/matuszemi)  
+
+The module is still in experimental phase but it's working for me ;) - if you have any questions feel free to contact me.
+
+Skype: matuszemi  
+Email: matus.zeman@gmail.com  
+IRC: matuszemi @ FreeNode / #zftalk.2  
+
 
 Introduction
 ============
 Provides ACL and different types of "guards" for your application.
 
-The module is still in experimental phase but it's working for me ;) - if you have any questions feel free to contact me anytime.
-
-Skype: matuszemi  
-Email: matus.zeman@gmail.com  
-IRC: matuszemi @ FreeNode / #zftalk.2  
 
 Features
 ========
