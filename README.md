@@ -305,6 +305,7 @@ If none is returned Zend\Acl\Acl instance is created and KapitchiAcl\Service\Acl
 Triggers until: Zend\Acl\Acl
 
 Parameters:
+
 * roleId - roleId of the user e.g. guest, user...
 
 ### KapitchiAcl\Service\Acl.staticAclLoaded
@@ -312,6 +313,7 @@ Parameters:
 This event is trigger once ACL has been loaded. Can be used e.g. by caching mechanism to store ACL into session.
 
 Parameters:
+
 * acl - Zend\Acl\Acl object
 * roleId - roleId of the user e.g. guest, user...
 
@@ -323,6 +325,7 @@ Triggered when KapitchiAcl\Service\Acl::invalidateCache() is called manually.
 TBD: do we need auto invalidation of cached ACL? E.g. every 5 mins?
 
 Parameters:
+
 * roleId - roleId of the user e.g. guest, user...
 
 
@@ -331,13 +334,19 @@ Parameters:
 KapitchiAcl\Service\Acl.loadStaticAcl
 
 This is used to load up static Acl.
+
+
 array(
                 'acl' => $acl,
                 'roleId' => $roleId,
             )
+
+
 'resolveResource', array(
                 'resource' => $resource
             )
+
+
 'loadResource', array(
                 'acl' => $acl,
                 'roleId' => $roleId,
