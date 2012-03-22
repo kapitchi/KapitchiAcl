@@ -53,7 +53,6 @@ This can be used to render few extra "social" blocks on you site while you're au
 _user_ and _admin_ roles are considered as having local user reference managed by your user/authentication module.
 They have got _auth_ parent role so generally speaking whatever _auth_ user can do _user_ and _admin_ users are allowed to do also.
 
-Only resource defined is _Route/Default_ used by Route Guard (see below). By default _guest_ and _auth_ user role (thus _user_ and _admin_) can access any route. See [module config](https://github.com/kapitchi/KapitchiAcl/blob/master/config/module.config.php) for details.
 
 ### Acl configuration
 ACL can be fully configured from module config using DI settings of [AclLoaderConfig mapper](https://github.com/kapitchi/KapitchiAcl/blob/master/src/KapitchiAcl/Model/Mapper/AclLoaderConfig.php).
@@ -116,8 +115,12 @@ Guards "protects" different aspects of the application from being accessible by 
 If unauthorized user tries to access e.g. route they are not permitted to [Unauthorized exception](https://github.com/kapitchi/KapitchiAcl/blob/master/src/KapitchiAcl/Exception/UnauthorizedException.php) is thrown.  
 They have been two guards implemented so far: Route and Event guards.
 
+TBD: Should we return HttpResponse instead of throwing Unauthorized exception?
+
 ### Route guard
-Route guard is used to protect MVC routes. The guard configuration maps route into ACL route resource. Route resource ACL can be then configured as any other resource permissions.
+[Route guard](https://github.com/kapitchi/KapitchiAcl/blob/master/src/KapitchiAcl/Guard/Route.php) is used to protect MVC routes. The guard configuration maps route into ACL route resource. Route resource ACL can be then configured as any other resource permissions.
+
+The guard is attached to Zend\Mvc\Application.dispatch event at priority 1000.
 
 #### Config example
 
@@ -127,7 +130,7 @@ Zend\Mvc\Router\RouteStack route configuration:
     * ChildRoute1
     * ChildRoute2
         * GrandChildRoute1
-        *GrandChildRoute2   
+        * GrandChildRoute2   
 
 See [ZF2 MVC Routing manual](http://packages.zendframework.com/docs/latest/manual/en/zend.mvc.routing.html) for more details or [KapitchiIdentity module example](https://github.com/kapitchi/KapitchiIdentity/blob/master/config/module.config.php).
 
@@ -204,4 +207,69 @@ return array(
 
 ### Event guard
 
-TODO
+[Event guard](https://github.com/kapitchi/KapitchiAcl/blob/master/src/KapitchiAcl/Guard/Event.php) protects (at priority 1000) all events specified in the configuration. Similar to Route guard, Event guard maps event identifier (object which triggers the event - a target) and event name to a resource and privilege optionally.
+Resource role permissions can be then adjusted as needed in ACL configuration.
+
+Example of common usage can be an authorizing certain roles to perform application service operations.
+E.g. you can specify that only _admin_ role can _persist_ _MyModule\Model\Album_ model. The condition obviously is to trigger an event before insert/update operation from a service method.
+
+The guard is attached to all events specified in the configuration at priority 1000. We use StaticEventManager to attach listeners to events.
+
+```
+File: MyModule/config/module.config.php
+
+
+$eventGuardDefMapConfig = array(
+    'MyModule/Model/Album.get' => array(
+        'eventId' => 'MyModule\Service\Album',
+        'event' => 'get.load',
+        'resource' => 'MyModule/Model/Identity',
+        'privilege' => 'get',
+    ),
+    'MyModule/Model/Album.persist' => array(
+        'eventId' => 'MyModule\Service\Album',
+        'event' => 'persist.pre',
+        'resource' => 'MyModule/Model/Identity',
+        'privilege' => 'persist',
+    ),
+    'MyModule/Model/Album.remove' => array(
+        'eventId' => 'MyModule\Service\Album',
+        'event' => 'remove.pre',
+        'resource' => 'MyModule/Model/Identity',
+        'privilege' => 'remove',
+    ),
+);
+
+$aclConfig = array(
+    'resources' => array(
+        'MyModule/Model/Identity' => null
+    ),
+    'rules' => array(
+        'allow' => array(
+            //grand admin a permission to perform any operation on MyModule/Model/Album resource
+            'MyModule/allow/admin' => array('admin', 'MyModule/Model/Album'),
+            //grand user a permission to read/get MyModule/Model/Album resource but they can't persist/remove
+            'MyModule/allow/user' => array('user', 'MyModule/Model/Album', 'get'),
+         ),
+    ),
+);
+
+return array(
+    'di' => array(
+        'instance' => array(
+            'KapitchiAcl\Model\Mapper\AclLoaderConfig' => array(
+                'parameters' => array(
+                    'config' => $aclConfig
+                 )
+            ),
+            'KapitchiAcl\Model\Mapper\EventGuardDefMapConfig' => array(
+                'parameters' => array(
+                    'config' => $eventGuardDefMapConfig
+                 )
+            )
+        )
+    )
+);   
+
+
+```
